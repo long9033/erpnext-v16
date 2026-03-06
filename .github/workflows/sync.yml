@@ -27,4 +27,4 @@ jobs:
       - name: Reset to upstream/version-16 (shallow)
         run: |
           git checkout -B version-16 upstream/version-16
-          git push origin version-16 --force
+          git push origin version-16 --force --no-verify
