@@ -1,0 +1,30 @@
+name: Mirror ERPNext version-16 (shallow)
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # 每天凌晨 2 点运行
+  workflow_dispatch:       # 支持手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          ref: version-16
+
+      - name: Set up git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream shallow
+        run: |
+          git remote add upstream https://github.com/frappe/erpnext.git
+          git fetch --depth=1 upstream version-16
+
+      - name: Reset to upstream/version-16 (shallow)
+        run: |
+          git checkout -B version-16 upstream/version-16
+          git push origin version-16 --force
